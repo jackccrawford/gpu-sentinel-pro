@@ -34,3 +34,4 @@ Thumbs.db
 
 # Supabase local dev
 supabase/volumes/
+frontend/.vite/
