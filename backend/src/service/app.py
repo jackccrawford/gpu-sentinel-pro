@@ -37,6 +37,7 @@ app.add_middleware(
 # In-memory state
 temperature_history = {}
 peak_temperatures = {}
+logging_enabled = True  # New state variable
 
 def get_nvidia_info() -> NvidiaInfo:
     try:
@@ -123,12 +124,15 @@ def get_gpu_metrics() -> GpuMetricsRecord:
         # Check for alerts
         alert_system.check_metrics(metrics)
 
-        # Store in database
-        try:
-            db.insert_gpu_metrics(metrics)
-            logger.info("Metrics stored in database")
-        except Exception as e:
-            logger.error(f"Failed to store metrics: {e}")
+        # Store in database only if logging is enabled
+        if logging_enabled:
+            try:
+                db.insert_gpu_metrics(metrics)
+                logger.info("Metrics stored in database")
+            except Exception as e:
+                logger.error(f"Failed to store metrics: {e}")
+        else:
+            logger.debug("Metrics logging is disabled, skipping database insert")
 
         return metrics
     except Exception as e:
@@ -200,6 +204,19 @@ async def get_gpu_history(
 async def get_alerts(hours: int = 24):
     """Get recent alerts"""
     return alert_system.get_recent_alerts(hours)
+
+@app.post("/api/logging/toggle")
+async def toggle_logging():
+    """Toggle metrics logging to database"""
+    global logging_enabled
+    logging_enabled = not logging_enabled
+    logger.info(f"Metrics logging {'enabled' if logging_enabled else 'disabled'}")
+    return {"logging_enabled": logging_enabled}
+
+@app.get("/api/logging/status")
+async def get_logging_status():
+    """Get current logging status"""
+    return {"logging_enabled": logging_enabled}
 
 if __name__ == "__main__":
     import uvicorn

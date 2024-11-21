@@ -107,6 +107,34 @@ function App() {
     const saved = localStorage.getItem('pollingInterval')
     return saved ? parseInt(saved) : 1000
   })
+  const [loggingEnabled, setLoggingEnabled] = useState(true)
+
+  useEffect(() => {
+    const fetchLoggingStatus = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/logging/status`)
+        if (!response.ok) throw new Error('Failed to fetch logging status')
+        const data = await response.json()
+        setLoggingEnabled(data.logging_enabled)
+      } catch (error) {
+        console.error('Error fetching logging status:', error)
+      }
+    }
+    fetchLoggingStatus()
+  }, [])
+
+  const toggleLogging = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/logging/toggle`, {
+        method: 'POST'
+      })
+      if (!response.ok) throw new Error('Failed to toggle logging')
+      const data = await response.json()
+      setLoggingEnabled(data.logging_enabled)
+    } catch (error) {
+      console.error('Error toggling logging:', error)
+    }
+  }
 
   const theme: ThemeColors = darkMode ? {
     background: '#1a1a1a',
@@ -342,6 +370,25 @@ function App() {
               </svg>
             )}
             {darkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
+          <button
+            onClick={toggleLogging}
+            style={{
+              padding: '8px 12px',
+              borderRadius: '8px',
+              border: `1px solid ${theme.border}`,
+              backgroundColor: theme.cardBackground,
+              color: loggingEnabled ? getMetricColor(90, theme) : theme.subtext,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M14 12c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2zm-2-9c-4.97 0-9 4.03-9 9H0l4 4 4-4H5c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.51 0-2.91-.49-4.06-1.3l-1.42 1.44C8.04 20.3 9.94 21 12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/>
+            </svg>
+            {loggingEnabled ? 'Pause Logging' : 'Resume Logging'}
           </button>
         </div>
       </div>
