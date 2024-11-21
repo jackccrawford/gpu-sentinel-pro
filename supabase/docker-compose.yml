@@ -1,0 +1,84 @@
+version: '3.8'
+services:
+  postgres:
+    image: supabase/postgres:latest
+    ports:
+      - "54432:5432"
+    environment:
+      POSTGRES_PASSWORD: Nc4wMosD0voRA7iSuNHKmzfdFsXyC1TY
+      POSTGRES_DB: postgres
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  studio:
+    image: supabase/studio:latest
+    ports:
+      - "54000:3000"
+    environment:
+      STUDIO_PG_META_URL: http://meta:8080
+      POSTGRES_PASSWORD: Nc4wMosD0voRA7iSuNHKmzfdFsXyC1TY
+      DEFAULT_ORGANIZATION_NAME: "GPU Metrics Monitor"
+      SUPABASE_URL: http://localhost:54001
+    depends_on:
+      - postgres
+      - kong
+
+  kong:
+    image: kong:latest
+    ports:
+      - "54001:8000"
+      - "54443:8443"
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /var/lib/kong/kong.yml
+      KONG_DNS_ORDER: LAST,A,CNAME
+      KONG_PLUGINS: request-transformer,cors,key-auth,acl
+    volumes:
+      - ./kong.yml:/var/lib/kong/kong.yml:ro
+
+  auth:
+    image: supabase/gotrue:latest
+    ports:
+      - "54002:9999"
+    environment:
+      GOTRUE_JWT_SECRET: "Rp0rKVWpTj8trLDaZZTPS58ppVd8C07u"
+      GOTRUE_JWT_EXP: 3600
+      GOTRUE_DB_DRIVER: postgres
+      DATABASE_URL: "postgres://postgres:Nc4wMosD0voRA7iSuNHKmzfdFsXyC1TY@postgres:5432/postgres?sslmode=disable"
+      API_EXTERNAL_URL: http://localhost:54001
+      SITE_URL: http://localhost:54000
+      OPERATOR_TOKEN: "PIAh8fRfFPnd70DYRSuVshTI6NXNraAj"
+    depends_on:
+      - postgres
+
+  rest:
+    image: postgrest/postgrest:latest
+    ports:
+      - "54003:3000"
+    environment:
+      PGRST_DB_URI: "postgres://postgres:Nc4wMosD0voRA7iSuNHKmzfdFsXyC1TY@postgres:5432/postgres"
+      PGRST_DB_SCHEMA: public
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: "Rp0rKVWpTj8trLDaZZTPS58ppVd8C07u"
+    depends_on:
+      - postgres
+
+  meta:
+    image: supabase/postgres-meta:latest
+    ports:
+      - "54004:8080"
+    environment:
+      PG_META_PORT: 8080
+      PG_META_DB_HOST: postgres
+      PG_META_DB_PASSWORD: Nc4wMosD0voRA7iSuNHKmzfdFsXyC1TY
+    depends_on:
+      - postgres
+
+volumes:
+  pg_data:

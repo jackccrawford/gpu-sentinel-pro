@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+
+# Environment files
+.env
+*.env
+
+# Logs
+*.log
+frontend/frontend.log
+backend/src/service/gpu_service.log
+
+# Service PIDs
+*.pid
+frontend/frontend.pid
+backend/src/service/service.pid
+
+# Build files
+dist/
+build/
+*.pyc
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Supabase local dev
+supabase/volumes/

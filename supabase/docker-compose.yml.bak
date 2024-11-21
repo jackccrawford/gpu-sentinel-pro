@@ -1,0 +1,84 @@
+version: '3.8'
+services:
+  postgres:
+    image: supabase/postgres:15.1.0.117
+    ports:
+      - "54432:5432"  # High port for Postgres
+    environment:
+      POSTGRES_PASSWORD: Nc4wMosD0voRA7iSuNHKmzfdFsXyC1TY
+      POSTGRES_DB: postgres
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  studio:
+    image: supabase/studio:20240205-9d2d574
+    ports:
+      - "54000:3000"  # High port for Studio
+    environment:
+      STUDIO_PG_META_URL: http://meta:8080
+      POSTGRES_PASSWORD: Nc4wMosD0voRA7iSuNHKmzfdFsXyC1TY
+      DEFAULT_ORGANIZATION_NAME: "GPU Metrics Monitor"
+      SUPABASE_URL: http://localhost:54001  # Match new Kong port
+    depends_on:
+      - postgres
+      - kong
+
+  kong:
+    image: kong:2.8.1
+    ports:
+      - "54001:8000"  # High port for Kong HTTP
+      - "54443:8443"  # High port for Kong HTTPS
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /var/lib/kong/kong.yml
+      KONG_DNS_ORDER: LAST,A,CNAME
+      KONG_PLUGINS: request-transformer,cors,key-auth,acl
+    volumes:
+      - ./kong.yml:/var/lib/kong/kong.yml:ro
+
+  auth:
+    image: supabase/gotrue:v2.132.3
+    ports:
+      - "54002:9999"  # High port for Auth
+    environment:
+      GOTRUE_JWT_SECRET: "Rp0rKVWpTj8trLDaZZTPS58ppVd8C07u"
+      GOTRUE_JWT_EXP: 3600
+      GOTRUE_DB_DRIVER: postgres
+      DATABASE_URL: "postgres://postgres:Nc4wMosD0voRA7iSuNHKmzfdFsXyC1TY@postgres:5432/postgres?sslmode=disable"
+      API_EXTERNAL_URL: http://localhost:54001  # Match new Kong port
+      SITE_URL: http://localhost:54000  # Match new Studio port
+      OPERATOR_TOKEN: "your-super-secret-operator-token"
+    depends_on:
+      - postgres
+
+  rest:
+    image: postgrest/postgrest:v11.2.0
+    ports:
+      - "54003:3000"  # High port for REST
+    environment:
+      PGRST_DB_URI: "postgres://postgres:Nc4wMosD0voRA7iSuNHKmzfdFsXyC1TY@postgres:5432/postgres"
+      PGRST_DB_SCHEMA: public
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: "Rp0rKVWpTj8trLDaZZTPS58ppVd8C07u"
+    depends_on:
+      - postgres
+
+  meta:
+    image: supabase/postgres-meta:v0.68.0
+    ports:
+      - "54004:8080"  # High port for Meta
+    environment:
+      PG_META_PORT: 8080
+      PG_META_DB_HOST: postgres
+      PG_META_DB_PASSWORD: Nc4wMosD0voRA7iSuNHKmzfdFsXyC1TY
+    depends_on:
+      - postgres
+
+volumes:
+  pg_data:

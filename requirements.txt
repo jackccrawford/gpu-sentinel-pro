@@ -1,0 +1,5 @@
+supabase==1.0.3
+python-dotenv==1.0.0
+pydantic==2.5.1
+pytest==7.4.3
+requests==2.31.0

@@ -1,0 +1,30 @@
+_format_version: "2.1"
+_transform: true
+
+services:
+  - name: auth-v1
+    url: http://auth:9999
+    routes:
+      - name: auth-v1-route
+        paths:
+          - /auth/v1
+    plugins:
+      - name: cors
+  
+  - name: rest-v1
+    url: http://rest:3000
+    routes:
+      - name: rest-v1-route
+        paths:
+          - /rest/v1
+    plugins:
+      - name: cors
+
+  - name: meta
+    url: http://meta:8080
+    routes:
+      - name: meta-route
+        paths:
+          - /pg
+    plugins:
+      - name: cors

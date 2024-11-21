@@ -1,0 +1,40 @@
+# Alert thresholds matching frontend
+alerts:
+  temperature:
+    critical: 80
+    warning: 70
+    caution: 60
+    good: 50
+    # below 50 is ideal
+
+  gpu_utilization:
+    critical: 90
+    warning: 75
+    caution: 50
+    good: 25
+    # below 25 is ideal
+
+  fan_speed:
+    critical: 80
+    warning: 65
+    caution: 50
+    good: 35
+    # below 35 is ideal
+
+  memory_usage:
+    critical: 90
+    warning: 75
+    caution: 50
+    good: 25
+    # below 25 is ideal
+
+# Polling intervals
+polling:
+  base_interval: 0.25  # 250ms
+  max_interval: 10.0   # 10 seconds
+
+# Data retention
+retention:
+  days_to_keep: 30
+  cleanup_on_startup: true
+  cleanup_on_shutdown: true
