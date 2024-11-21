@@ -1,148 +1,91 @@
-# GPU Metrics Dashboard
+# GPU Sentinel Pro
 
-Real-time NVIDIA GPU monitoring dashboard with FastAPI backend and React frontend, featuring time-series data storage using Supabase.
+Enterprise-grade NVIDIA GPU monitoring and analytics suite that helps you prevent costly hardware failures and optimize GPU performance.
 
-## Service Management
+## Why GPU Sentinel Pro?
 
-### Backend Service
-- Start: `backend/src/service/run_service.sh`
-- Stop: `backend/src/service/stop_service.sh`
-- Default Port: 5500
-- Logs: `backend/src/service/gpu_service.log`
-- Endpoints:
-  - GPU Stats: http://localhost:5500/api/gpu-stats
-  - Alerts: http://localhost:5500/api/alerts
-  - Historical Data: http://localhost:5500/api/gpu-stats/history
-  - API Docs: http://localhost:5500/docs
+- **Prevent Hardware Damage**: Real-time temperature monitoring and early warning system
+- **Optimize Resource Usage**: Track GPU utilization and memory patterns
+- **Reduce Operational Costs**: Power consumption analytics and efficiency metrics
+- **Save Development Time**: Ready-to-use solution with comprehensive API
+- **Make Data-Driven Decisions**: Historical analysis and performance trends
 
-Example startup output:
-```
-Backend log:
-INFO:__main__:Starting GPU Metrics Service
-INFO:     Uvicorn running on http://127.0.0.1:5500
-INFO:     Application startup complete.
-```
+## Key Features
 
-### Frontend Service
-- Start: `frontend/run_frontend.sh`
-- Stop: `frontend/stop_frontend.sh`
-- Default Port: 3055
-- Logs: `frontend/frontend.log`
-- URL: http://localhost:3055
+### 🔍 Real-Time Monitoring
+- Live dashboard with microsecond precision
+- Multi-GPU support with individual card tracking
+- Power consumption and efficiency metrics
+- Memory utilization and temperature trends
+- Dark/light mode with responsive design
 
-Example startup output:
-```
-Frontend log:
-> gpu-metrics-dashboard@1.0.0 dev
-> vite
+### ⚡ Intelligent Alerts
+- Configurable warning thresholds
+- Temperature spike detection
+- Resource bottleneck alerts
+- Email and webhook notifications
+- Custom alert rules
 
-VITE v4.5.5  ready in 219 ms
-➜  Local:   http://localhost:3055/
-➜  Network: http://192.168.0.11:3055/
-```
+### 📊 Advanced Analytics
+- Historical performance data
+- Time-series trend analysis
+- Performance pattern recognition
+- Resource usage optimization insights
+- Exportable reports
 
-## Service Health Checks
+### 🛠 Enterprise Integration
+- RESTful API for system integration
+- Supabase time-series database
+- Zero-config containerized deployment
+- Multi-user access control
+- Secure authentication
 
-### Check Backend Status
+## Perfect For
+- Machine Learning/AI Development
+- Render Farms and Graphics Studios
+- Cryptocurrency Mining Operations
+- Research Institutions
+- Cloud Gaming Services
+
+## Technical Stack
+- **Frontend**: React, TypeScript, Vite
+- **Backend**: FastAPI, Python
+- **Database**: Supabase (PostgreSQL)
+- **Monitoring**: NVIDIA System Management Interface
+- **Deployment**: Docker, Docker Compose
+
+## Quick Start
 ```bash
-curl http://localhost:5500/api/gpu-stats
+# Clone the repository
+git clone https://github.com/jackccrawford/gpu-sentinel-pro.git
+
+# Start the services
+docker-compose up -d
+
+# Access the dashboard
+http://localhost:3055
 ```
 
-### Check Frontend Status
-Frontend health can be verified by accessing http://localhost:3055 in a web browser.
+## Documentation
+- [Installation Guide](docs/installation.md)
+- [API Reference](docs/api.md)
+- [Configuration](docs/configuration.md)
+- [Alert Setup](docs/alerts.md)
 
-## Logs
+## Security
+- Role-based access control
+- API key authentication
+- Data encryption at rest
+- Secure WebSocket connections
+- Regular security updates
 
-- Backend logs are stored in `backend/src/service/gpu_service.log`
-- Frontend logs are stored in `frontend/frontend.log`
-- Use `tail -f <logfile>` to follow log updates in real-time
-
-## Configuration
-
-### Backend Configuration
-- Main config: `backend/src/service/config.yaml`
-- Environment variables: `backend/.env`
-
-### Frontend Configuration
-- Port configuration: `frontend/vite.config.ts`
-- API endpoint configuration: `frontend/src/config.ts`
-
-## Data Persistence Layer
-
-The system uses Supabase for time-series data storage, allowing for:
-- Historical data analysis
-- Performance trending
-- Long-term GPU health monitoring
-- Data-driven insights
-
-### Data Structure
-
-The system captures GPU metrics in a denormalized format:
-
-```json
-{
-  "timestamp": "2023-11-20T10:00:00Z",
-  "gpu_burn_metrics": {
-    "duration": 0,
-    "errors": 0,
-    "running": false
-  },
-  "gpus": [
-    {
-      "compute_mode": "Default",
-      "fan_speed": 27,
-      "gpu_utilization": 10,
-      "index": 0,
-      "memory_total": 12288,
-      "memory_used": 135,
-      "name": "NVIDIA TITAN Xp",
-      "peak_temperature": 48,
-      "power_draw": 67.17,
-      "power_limit": 250,
-      "temp_change_rate": 0,
-      "temperature": 48
-    }
-  ],
-  "nvidia_info": {
-    "cuda_version": "12.2",
-    "driver_version": "535.183.01"
-  }
-}
-```
-
-### Supabase Setup
-
-1. Create a `.env` file from the template:
-```bash
-cp .env.template .env
-```
-
-2. Add your Supabase credentials to `.env`:
-```
-SUPABASE_URL=your_project_url
-SUPABASE_KEY=your_anon_key
-```
-
-3. Run the database migrations:
-```sql
-# Execute the SQL in migrations/001_create_gpu_metrics_table.sql in your Supabase SQL editor
-```
-
-### Security
-
-- Uses Supabase Row Level Security (RLS)
-- Credentials stored in environment variables
-- Data validation before storage
-- Error handling and logging
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+## Support
+- [Issue Tracker](https://github.com/jackccrawford/gpu-sentinel-pro/issues)
+- [Discussions](https://github.com/jackccrawford/gpu-sentinel-pro/discussions)
+- [Security Policy](SECURITY.md)
 
 ## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-MIT License - See LICENSE file
+## Contributing
+Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) first.
