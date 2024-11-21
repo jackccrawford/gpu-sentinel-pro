@@ -7,6 +7,12 @@ Transform GPU monitoring from complex metrics into intuitive visual patterns. En
 ![Dark Mode Dashboard](images/DarkMode-Stressed.png)
 *Real-time GPU metrics visualized for instant comprehension*
 
+## Project Overview
+- [Requirements & User Stories](docs/requirements/REQUIREMENTS.md)
+- [Technical Architecture](docs/architecture/ARCHITECTURE.md)
+- [Development Guide](docs/requirements/DEVELOPMENT_GUIDE.md)
+- [API Documentation](docs/API.md)
+
 ## Why GPU Sentinel Pro?
 
 Do you find yourself:
@@ -86,6 +92,8 @@ See [Installation Guide](docs/INSTALLATION.md) for detailed setup instructions.
 
 ## Documentation
 
+- [Requirements & User Stories](docs/requirements/REQUIREMENTS.md)
+- [Technical Architecture](docs/architecture/ARCHITECTURE.md)
 - [API Reference](docs/API.md)
 - [Installation Guide](docs/INSTALLATION.md)
 - [Contributing Guide](CONTRIBUTING.md)
@@ -93,6 +101,7 @@ See [Installation Guide](docs/INSTALLATION.md) for detailed setup instructions.
 
 ## Tech Stack
 
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
