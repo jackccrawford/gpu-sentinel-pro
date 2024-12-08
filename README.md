@@ -5,8 +5,9 @@
 Transform GPU monitoring from complex metrics into intuitive visual patterns. Enterprise-grade NVIDIA GPU monitoring with real-time analytics, intelligent alerts, and historical analysis.
 
 [![CodeQL](https://github.com/jackccrawford/gpu-sentinel-pro/actions/workflows/codeql.yml/badge.svg)](https://github.com/jackccrawford/gpu-sentinel-pro/actions/workflows/codeql.yml)
-[![built with Codeium](https://codeium.com/badges/main)](https://codeium.com)
-[![built with Bolt.new](https://bolt.new/badges/main)](https://bolt.new)
+[![X Follow](https://img.shields.io/badge/style--blue?style=social&logo=twitter&label=Follow%20%40jackccrawford)](https://x.com/intent/follow?screen_namejackccrawford)
+![MIT License](https://img.shields.io/github/license/Exafunction/codeium.vim)
+[![Built with Codeium](https://codeium.com/badges/main)](https://codeium.com)
 
 ![Dark Mode Dashboard](images/DarkMode-Stressed.png)
 *Real-time GPU metrics visualized for instant comprehension*
