@@ -5,10 +5,6 @@
 Transform GPU monitoring from complex metrics into intuitive visual patterns. Enterprise-grade NVIDIA GPU monitoring with real-time analytics, intelligent alerts, and historical analysis.
 
 [![CodeQL](https://github.com/jackccrawford/gpu-sentinel-pro/actions/workflows/codeql.yml/badge.svg)](https://github.com/jackccrawford/gpu-sentinel-pro/actions/workflows/codeql.yml)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=jackccrawford_gpu-sentinel-pro&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=jackccrawford_gpu-sentinel-pro)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=jackccrawford_gpu-sentinel-pro&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=jackccrawford_gpu-sentinel-pro)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=jackccrawford_gpu-sentinel-pro&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=jackccrawford_gpu-sentinel-pro)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=jackccrawford_gpu-sentinel-pro&metric=coverage)](https://sonarcloud.io/summary/new_code?id=jackccrawford_gpu-sentinel-pro)
 
 ![Dark Mode Dashboard](images/DarkMode-Stressed.png)
 *Real-time GPU metrics visualized for instant comprehension*
@@ -119,4 +115,4 @@ See [Installation Guide](docs/INSTALLATION.md) for detailed setup instructions.
 
 ---
 
-<p align="center">Built for the ML/AI and HPC communities</p>
+<p align="center">[![Built with Codeium](https://codeium.com/badges/main)](https://codeium.com) for the ML/AI and HPC communities</p>

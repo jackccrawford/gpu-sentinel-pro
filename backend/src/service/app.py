@@ -1,6 +1,8 @@
 import sys
 from pathlib import Path
-sys.path.append(str(Path(__file__).parent.parent.parent))
+backend_dir = str(Path(__file__).resolve().parent.parent.parent)
+if backend_dir not in sys.path:
+    sys.path.insert(0, backend_dir)
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,14 +13,23 @@ from collections import deque
 from datetime import datetime, timedelta
 from typing import Optional
 import logging
+import os
+import shutil
 
 # Import our components
 from src.database.client import db
 from src.models.gpu_metrics import GpuMetricsRecord, GpuBurnMetrics, NvidiaInfo, GpuMetrics
 from src.service.alerts import alert_system
+from src.service.system_health import SystemHealthCheck
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 logger = logging.getLogger(__name__)
+
+# Initialize system health checker for nvidia-smi operations
+system_health = SystemHealthCheck()
 
 app = FastAPI(
     title="GPU Metrics Service",
@@ -37,11 +48,11 @@ app.add_middleware(
 # In-memory state
 temperature_history = {}
 peak_temperatures = {}
-logging_enabled = True  # New state variable
+logging_enabled = True
 
 def get_nvidia_info() -> NvidiaInfo:
     try:
-        result = subprocess.run(['nvidia-smi'], capture_output=True, text=True)
+        result = system_health._run_nvidia_command([system_health.nvidia_smi_path])
         cuda_version = "Unknown"
         driver_version = "Unknown"
         
@@ -69,11 +80,11 @@ def get_gpu_metrics() -> GpuMetricsRecord:
     try:
         nvidia_info = get_nvidia_info()
         
-        gpu_info = subprocess.run([
-            'nvidia-smi', 
-            '--query-gpu=index,name,fan.speed,power.draw,memory.total,memory.used,utilization.gpu,temperature.gpu,compute_mode,power.limit',
-            '--format=csv,noheader,nounits'
-        ], capture_output=True, text=True)
+        gpu_info = system_health._run_nvidia_command([
+            system_health.nvidia_smi_path,
+            "--query-gpu=index,name,fan.speed,power.draw,memory.total,memory.used,utilization.gpu,temperature.gpu,compute_mode,power.limit",
+            "--format=csv,noheader,nounits"
+        ])
 
         gpus = []
         current_time = datetime.now().timestamp()
@@ -149,13 +160,21 @@ async def root():
         "endpoints": {
             "GET /api/gpu-stats": "Current GPU metrics",
             "GET /api/gpu-stats/history": "Historical GPU metrics (optional: start_time, end_time, hours=24)",
-            "GET /api/alerts": "Recent alerts"
+            "GET /api/alerts": "Recent alerts",
+            "GET /api/logging/status": "Get current logging status",
+            "POST /api/logging/toggle": "Toggle metrics logging"
         }
     }
 
 @app.get("/api/gpu-stats")
 async def get_gpu_stats():
     """Get current GPU statistics"""
+    # Simulate error conditions for testing
+    system_check = system_health.run_full_check()
+    if not system_check["system_ready"]:
+        error_message = system_health.get_user_friendly_message(system_check)
+        raise HTTPException(status_code=503, detail=error_message)
+    
     return get_gpu_metrics()
 
 @app.get("/api/gpu-stats/history")

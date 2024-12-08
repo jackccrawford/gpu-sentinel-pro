@@ -99,6 +99,7 @@ const POLLING_INTERVALS = [
 
 function App() {
   const [data, setData] = useState<GPUData | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('darkMode')
     return saved ? JSON.parse(saved) : true
@@ -170,13 +171,16 @@ function App() {
       try {
         const response = await fetch(`${API_URL}/api/gpu-stats`)
         if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+          const errorData = await response.json()
+          throw new Error(errorData.detail || `HTTP error! Status: ${response.status}`);
         }
         const jsonData = await response.json()
         console.log('Response received at:', new Date().toLocaleTimeString(), 'Duration:', Date.now() - startTime, 'ms');
         setData(jsonData)
+        setError(null)
       } catch (error) {
         console.error('Fetch error:', error);
+        setError(error instanceof Error ? error.message : 'Failed to fetch GPU data')
       }
     }
 
@@ -203,8 +207,107 @@ function App() {
     }
   }, [])
 
+  if (error) {
+    return (
+      <div style={{ 
+        padding: '20px', 
+        maxWidth: '800px', 
+        margin: '40px auto',
+        backgroundColor: theme.cardBackground,
+        color: theme.text,
+        borderRadius: '12px',
+        border: `1px solid ${theme.border}`,
+        boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '16px',
+          marginBottom: '24px'
+        }}>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill={getColorScheme(theme.isDark).warning[theme.isDark ? 'dark' : 'light']}>
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+          </svg>
+          <h2 style={{ margin: 0, color: theme.text }}>GPU Monitoring Unavailable</h2>
+        </div>
+        
+        <div style={{
+          backgroundColor: theme.background,
+          padding: '16px',
+          borderRadius: '8px',
+          marginBottom: '24px',
+          fontFamily: 'monospace',
+          fontSize: '14px',
+          color: theme.subtext
+        }}>
+          {error}
+        </div>
+
+        <div style={{
+          borderTop: `1px solid ${theme.border}`,
+          paddingTop: '20px'
+        }}>
+          <h3 style={{ marginTop: 0, color: theme.text }}>Troubleshooting Steps:</h3>
+          <ul style={{ color: theme.text, lineHeight: 1.6 }}>
+            <li>Verify NVIDIA drivers are installed: <code style={{ backgroundColor: theme.background, padding: '2px 6px', borderRadius: '4px' }}>nvidia-smi</code></li>
+            <li>Check GPU connection and power supply</li>
+            <li>Ensure CUDA toolkit is properly installed</li>
+            <li>Verify user permissions for GPU access</li>
+            <li>Check system logs for driver errors</li>
+          </ul>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: getColorScheme(theme.isDark).good[theme.isDark ? 'dark' : 'light'],
+              color: '#fff',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              marginTop: '16px'
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+            </svg>
+            Retry Connection
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   if (!data) {
-    return <div>Loading...</div>
+    return (
+      <div style={{ 
+        padding: '20px', 
+        maxWidth: '800px', 
+        margin: '40px auto',
+        textAlign: 'center',
+        color: theme.text
+      }}>
+        <div style={{
+          display: 'inline-block',
+          width: '40px',
+          height: '40px',
+          border: `4px solid ${theme.border}`,
+          borderTopColor: getColorScheme(theme.isDark).good[theme.isDark ? 'dark' : 'light'],
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite'
+        }} />
+        <style>
+          {`
+            @keyframes spin {
+              to { transform: rotate(360deg); }
+            }
+          `}
+        </style>
+        <p style={{ marginTop: '16px' }}>Connecting to GPU Monitoring Service...</p>
+      </div>
+    )
   }
 
   const getColorScheme = (isDark: boolean) => ({

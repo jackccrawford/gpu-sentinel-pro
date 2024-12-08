@@ -3,14 +3,50 @@ import shutil
 import logging
 from typing import Dict, List, Optional
 import re
+import os
 
 logger = logging.getLogger(__name__)
 
 class SystemHealthCheck:
     def __init__(self):
+        # Find nvidia-smi with full path and validate it
         self.nvidia_smi_path = shutil.which('nvidia-smi')
+        if self.nvidia_smi_path:
+            self.nvidia_smi_path = os.path.realpath(self.nvidia_smi_path)
+            if not os.path.exists(self.nvidia_smi_path):
+                self.nvidia_smi_path = None
+            elif not os.access(self.nvidia_smi_path, os.X_OK):
+                self.nvidia_smi_path = None
         self._driver_version = None
         self._cuda_version = None
+
+    def _validate_nvidia_command(self, args: List[str]) -> bool:
+        """Validate nvidia-smi command arguments"""
+        valid_args = [
+            "--query-gpu=gpu_name",
+            "--query-gpu=gpu_name,gpu_bus_id,memory.total,compute_mode",
+            "--query-gpu=driver_version",
+            "--query-gpu=index,name,fan.speed,power.draw,memory.total,memory.used,utilization.gpu,temperature.gpu,compute_mode,power.limit",
+            "--format=csv,noheader",
+            "--format=csv,noheader,nounits"
+        ]
+        return all(arg in valid_args or arg == self.nvidia_smi_path for arg in args)
+
+    def _run_nvidia_command(self, args: List[str]) -> subprocess.CompletedProcess:
+        """Run nvidia-smi command with validation"""
+        if not self.nvidia_smi_path:
+            raise RuntimeError("nvidia-smi not found or not executable")
+        
+        if not self._validate_nvidia_command(args):
+            raise ValueError("Invalid nvidia-smi arguments")
+
+        return subprocess.run(
+            args,
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False  # We handle return code manually
+        )
 
     def check_nvidia_smi(self) -> Dict[str, bool | str]:
         """Check if nvidia-smi is available and accessible."""
@@ -22,8 +58,11 @@ class SystemHealthCheck:
             }
         
         try:
-            result = subprocess.run([self.nvidia_smi_path, "--query-gpu=gpu_name", "--format=csv,noheader"],
-                                 capture_output=True, text=True, timeout=5)
+            result = self._run_nvidia_command([
+                self.nvidia_smi_path,
+                "--query-gpu=gpu_name",
+                "--format=csv,noheader"
+            ])
             if result.returncode != 0:
                 logger.error(f"nvidia-smi command failed: {result.stderr}")
                 return {
@@ -54,10 +93,11 @@ class SystemHealthCheck:
             }
 
         try:
-            result = subprocess.run(
-                [self.nvidia_smi_path, "--query-gpu=gpu_name,gpu_bus_id,memory.total,compute_mode", "--format=csv,noheader"],
-                capture_output=True, text=True, timeout=5
-            )
+            result = self._run_nvidia_command([
+                self.nvidia_smi_path,
+                "--query-gpu=gpu_name,gpu_bus_id,memory.total,compute_mode",
+                "--format=csv,noheader"
+            ])
             
             if result.returncode != 0:
                 return {
@@ -98,8 +138,11 @@ class SystemHealthCheck:
             }
 
         try:
-            result = subprocess.run([self.nvidia_smi_path, "--query-gpu=driver_version", "--format=csv,noheader"],
-                                 capture_output=True, text=True, timeout=5)
+            result = self._run_nvidia_command([
+                self.nvidia_smi_path,
+                "--query-gpu=driver_version",
+                "--format=csv,noheader"
+            ])
             
             if result.returncode != 0:
                 return {
@@ -136,7 +179,7 @@ class SystemHealthCheck:
             }
 
         try:
-            result = subprocess.run([self.nvidia_smi_path], capture_output=True, text=True, timeout=5)
+            result = self._run_nvidia_command([self.nvidia_smi_path])
             
             if result.returncode != 0:
                 return {
