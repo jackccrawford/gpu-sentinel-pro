@@ -37,7 +37,7 @@ if [ ! -d "frontend/node_modules" ]; then
 fi
 
 # Kill any existing processes on our ports
-kill_port 8000  # FastAPI
+kill_port 5183  # FastAPI
 kill_port 5173  # Vite dev server
 
 # Start all components in background
@@ -57,8 +57,10 @@ echo "
 🚀 GPU Sentinel Pro is running!
 
 📊 Frontend: http://localhost:5173
-🔧 API Docs: http://localhost:8000/docs
-📘 ReDoc: http://localhost:8000/redoc
+🔧 API & Docs: http://localhost:5183
+📘 API Documentation:
+   - Swagger UI: http://localhost:5183/docs
+   - ReDoc: http://localhost:5183/redoc
 
 Press Ctrl+C to stop all services
 "

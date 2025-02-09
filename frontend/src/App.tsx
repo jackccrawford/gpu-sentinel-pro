@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const API_URL = 'http://localhost:5101'
+const API_URL = 'http://localhost:5183'
 
 /**
  * Represents comprehensive information about a single NVIDIA GPU
