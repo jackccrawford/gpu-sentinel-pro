@@ -30,29 +30,36 @@ Do you find yourself:
 ## Features
 
 ### 🎯 Intuitive Monitoring
-- Real-time visual dashboard
-- Color-coded temperature ranges
-- Resource utilization patterns
-- Multi-GPU support
-- Dark/light mode
+- Real-time visual dashboard with modern UI components
+- Color-coded temperature and utilization ranges
+- Resource utilization patterns and trends
+- Multi-GPU support with individual monitoring
+- Dark/light mode with Material Design
+- System health diagnostics and troubleshooting
 
 ### 🔔 Intelligent Alerts
-- Configurable thresholds
-- Temperature spike detection
-- Resource bottleneck warnings
-- Email/webhook notifications
+- Fully configurable alert thresholds
+- Multi-level severity system (warning/critical)
+- Temperature and resource spike detection
+- Custom alert rules and durations
+- Alert history and acknowledgment workflow
+- Email/webhook notifications with customizable templates
 
 ### 📊 Advanced Analytics
-- Historical performance data
-- Time-series analysis
-- Usage pattern recognition
-- Power efficiency metrics
+- Comprehensive historical performance data
+- Advanced time-series analysis with anomaly detection
+- Usage pattern recognition and trend analysis
+- Power efficiency metrics and cost analysis
+- Resource utilization heatmaps
+- Performance prediction and optimization suggestions
 
 ### 🛠 Enterprise Integration
-- RESTful API
-- Supabase time-series storage
-- Zero-config deployment
-- Multi-user access
+- RESTful API with full documentation
+- Supabase time-series storage with retention policies
+- Zero-config deployment with health monitoring
+- Multi-user access control
+- Data export and backup capabilities
+- Configurable logging and diagnostics
 
 ## Visual Intelligence
 
@@ -78,6 +85,47 @@ Intuitive color-coding for instant recognition:
 - 🟡 65-74°C: Normal
 - 🟢 50-64°C: Optimal
 - 🔵 <50°C: Cool
+
+## System Requirements
+
+### Hardware Requirements
+- NVIDIA GPU with compute capability 3.0 or higher
+- 4GB RAM minimum (8GB recommended)
+- 1GB free disk space
+
+### Software Requirements
+- NVIDIA Driver 450.80.02 or higher
+- CUDA 11.0 or higher (optional, for advanced features)
+- Python 3.8 or higher
+- Node.js 16.0 or higher
+
+## Installation
+
+```bash
+# Clone repository
+git clone https://github.com/jackccrawford/gpu-sentinel-pro.git
+cd gpu-sentinel-pro
+
+# Install backend dependencies
+cd backend
+pip install -r requirements.txt
+
+# Install frontend dependencies
+cd ../frontend
+npm install
+
+# Start services
+cd ../backend/src/service
+./run_service.sh
+
+cd ../../../frontend
+npm run dev
+
+# Access dashboard
+http://localhost:3055
+```
+
+For detailed setup instructions and configuration options, see our [Installation Guide](docs/INSTALLATION.md).
 
 ## Quick Start
 

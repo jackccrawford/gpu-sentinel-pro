@@ -34,4 +34,14 @@ Thumbs.db
 
 # Supabase local dev
 supabase/volumes/
+
+# TypeScript
+*.tsbuildinfo
 frontend/.vite/
+frontend/node_modules/.vite/
+frontend/node_modules/.package-lock.json
+
+# Vite
+*.local
+.vite/
+dist-ssr/

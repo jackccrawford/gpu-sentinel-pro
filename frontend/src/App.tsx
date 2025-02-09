@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { API_URL } from './config'
+
+const API_URL = 'http://localhost:5101'
 
 /**
  * Represents comprehensive information about a single NVIDIA GPU
@@ -88,6 +89,29 @@ interface ThemeColors {
   isDark: boolean
 }
 
+const getColorScheme = (isDark: boolean) => ({
+  critical: {
+    light: '#DC2626', // deep red (visible on white)
+    dark: '#FF6B6B'   // lighter red (visible on dark)
+  },
+  warning: {
+    light: '#EA580C', // deep orange
+    dark: '#FFA94D'   // lighter orange
+  },
+  caution: {
+    light: '#CA8A04', // deep yellow-orange
+    dark: '#FFD43B'   // lighter yellow
+  },
+  good: {
+    light: '#16A34A', // deep green
+    dark: '#51CF66'   // lighter green
+  },
+  ideal: {
+    light: '#2563EB', // deep blue
+    dark: '#339AF0'   // lighter blue
+  }
+});
+
 const POLLING_INTERVALS = [
   { label: '250ms', value: 250 },
   { label: '500ms', value: 500 },
@@ -167,15 +191,17 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       const startTime = Date.now();
-      console.log('Fetching GPU stats at:', new Date(startTime).toLocaleTimeString());
+      console.log('Starting fetch at:', new Date(startTime).toLocaleTimeString());
       try {
+        console.log('Fetching from:', `${API_URL}/api/gpu-stats`);
         const response = await fetch(`${API_URL}/api/gpu-stats`)
         if (!response.ok) {
+          console.error('Response not OK:', response.status, response.statusText);
           const errorData = await response.json()
           throw new Error(errorData.detail || `HTTP error! Status: ${response.status}`);
         }
         const jsonData = await response.json()
-        console.log('Response received at:', new Date().toLocaleTimeString(), 'Duration:', Date.now() - startTime, 'ms');
+        console.log('Response data:', jsonData);
         setData(jsonData)
         setError(null)
       } catch (error) {
@@ -184,6 +210,7 @@ function App() {
       }
     }
 
+    console.log('Setting up data fetch with interval:', pollingInterval);
     fetchData()
     const interval = setInterval(fetchData, pollingInterval)
     return () => clearInterval(interval)
@@ -309,29 +336,6 @@ function App() {
       </div>
     )
   }
-
-  const getColorScheme = (isDark: boolean) => ({
-    critical: {
-      light: '#DC2626', // deep red (visible on white)
-      dark: '#FF6B6B'   // lighter red (visible on dark)
-    },
-    warning: {
-      light: '#EA580C', // deep orange
-      dark: '#FFA94D'   // lighter orange
-    },
-    caution: {
-      light: '#CA8A04', // deep yellow-orange
-      dark: '#FFD43B'   // lighter yellow
-    },
-    good: {
-      light: '#16A34A', // deep green
-      dark: '#51CF66'   // lighter green
-    },
-    ideal: {
-      light: '#2563EB', // deep blue
-      dark: '#339AF0'   // lighter blue
-    }
-  });
 
   const getMetricColor = (value: number, theme: ThemeColors): string => {
     const colors = getColorScheme(theme.isDark);
