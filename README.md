@@ -12,158 +12,171 @@ Transform GPU monitoring from complex metrics into intuitive visual patterns. En
 ![Dark Mode Dashboard](images/DarkMode-Stressed.png)
 *Real-time GPU metrics visualized for instant comprehension*
 
-## Project Overview
-- [Requirements & User Stories](docs/requirements/REQUIREMENTS.md)
-- [Technical Architecture](docs/architecture/ARCHITECTURE.md)
-- [Development Guide](docs/requirements/DEVELOPMENT_GUIDE.md)
-- [API Documentation](docs/API.md)
-
-## Why GPU Sentinel Pro?
-
-Do you find yourself:
-- Parsing dense terminal output when you should be focusing on your work?
-- Missing critical temperature spikes or memory leaks?
-- Lacking historical data for performance analysis?
-- Needing better alerting for GPU health?
-- Managing multiple GPUs across different workloads?
-
-## Features
-
-### 🎯 Intuitive Monitoring
-- Real-time visual dashboard with modern UI components
-- Color-coded temperature and utilization ranges
-- Resource utilization patterns and trends
-- Multi-GPU support with individual monitoring
-- Dark/light mode with Material Design
-- System health diagnostics and troubleshooting
-
-### 🔔 Intelligent Alerts
-- Fully configurable alert thresholds
-- Multi-level severity system (warning/critical)
-- Temperature and resource spike detection
-- Custom alert rules and durations
-- Alert history and acknowledgment workflow
-- Email/webhook notifications with customizable templates
-
-### 📊 Advanced Analytics
-- Comprehensive historical performance data
-- Advanced time-series analysis with anomaly detection
-- Usage pattern recognition and trend analysis
-- Power efficiency metrics and cost analysis
-- Resource utilization heatmaps
-- Performance prediction and optimization suggestions
-
-### 🛠 Enterprise Integration
-- RESTful API with full documentation
-- Supabase time-series storage with retention policies
-- Zero-config deployment with health monitoring
-- Multi-user access control
-- Data export and backup capabilities
-- Configurable logging and diagnostics
-
-## Visual Intelligence
-
-### Traditional Output vs. GPU Sentinel Pro
-![Traditional vs Modern](images/nvidia-smi.png)
-*Transform dense metrics into intuitive patterns*
-
-### Real-world Usage
-
-#### Machine Learning Workloads
-![ML Monitoring](images/Ollama-Mistral-Small.png)
-*Clear resource utilization during ML model training*
-
-#### Critical Temperature Monitoring
-![Temperature Alerts](images/gpu-burn-danger-zone.png)
-*Immediate visual alerts during intensive workloads*
-
-## Temperature Monitoring
-
-Intuitive color-coding for instant recognition:
-- 🔴 ≥85°C: Critical
-- 🟠 75-84°C: Warning
-- 🟡 65-74°C: Normal
-- 🟢 50-64°C: Optimal
-- 🔵 <50°C: Cool
-
-## System Requirements
-
-### Hardware Requirements
-- NVIDIA GPU with compute capability 3.0 or higher
-- 4GB RAM minimum (8GB recommended)
-- 1GB free disk space
-
-### Software Requirements
-- NVIDIA Driver 450.80.02 or higher
-- CUDA 11.0 or higher (optional, for advanced features)
-- Python 3.8 or higher
-- Node.js 16.0 or higher
-
-## Installation
-
-```bash
-# Clone repository
-git clone https://github.com/jackccrawford/gpu-sentinel-pro.git
-cd gpu-sentinel-pro
-
-# Install backend dependencies
-cd backend
-pip install -r requirements.txt
-
-# Install frontend dependencies
-cd ../frontend
-npm install
-
-# Start services
-cd ../backend/src/service
-./run_service.sh
-
-cd ../../../frontend
-npm run dev
-
-# Access dashboard
-http://localhost:3055
-```
-
-For detailed setup instructions and configuration options, see our [Installation Guide](docs/INSTALLATION.md).
-
 ## Quick Start
 
+### Prerequisites
+- NVIDIA GPU with compute capability 3.0 or higher
+- NVIDIA Driver 450.80.02 or higher
+- Python 3.8+ and Node.js 16.0+
+- 4GB RAM (8GB recommended)
+- 1GB free disk space
+
+### Installation
+
+1. Clone the repository:
 ```bash
-# Clone repository
-git clone https://github.com/jackccrawford/gpu-sentinel-pro.git
-
-# Start services
-./backend/src/service/run_service.sh
-./frontend/run_frontend.sh
-
-# Access dashboard
-http://localhost:3055
+git clone git@github.com:jackccrawford/gpu-sentinel-pro.git
+cd gpu-sentinel-pro
 ```
 
-See [Installation Guide](docs/INSTALLATION.md) for detailed setup instructions.
+2. Set up the backend:
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: .\venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-## Documentation
+3. Set up the frontend:
+```bash
+cd frontend
+npm install
+```
 
-- [Requirements & User Stories](docs/requirements/REQUIREMENTS.md)
-- [Technical Architecture](docs/architecture/ARCHITECTURE.md)
-- [API Reference](docs/API.md)
-- [Installation Guide](docs/INSTALLATION.md)
-- [Contributing Guide](CONTRIBUTING.md)
-- [Security Policy](SECURITY.md)
+4. Start the services:
+```bash
+# Terminal 1 - Backend
+cd backend
+python src/service/app.py
 
-## Tech Stack
+# Terminal 2 - Frontend
+cd frontend
+npm run dev
+```
+
+5. Access the dashboard at http://localhost:5173
+
+## Pro Features
+
+### 🎯 Enterprise-Grade Monitoring
+- **Real-time Visual Dashboard**
+  - Modern React components with Material UI
+  - Responsive design for desktop and mobile
+  - Dark/light mode with automatic system preference detection
+  - Multi-GPU support with individual monitoring panels
+
+- **Advanced Metrics**
+  - Temperature and utilization with color-coded ranges
+  - Memory usage and bandwidth monitoring
+  - Power consumption and efficiency tracking
+  - Process-level GPU utilization
+  - Custom metric aggregation
+
+### 🔔 Intelligent Alert System
+- **Configurable Thresholds**
+  ```json
+  {
+    "temperature": {
+      "warning": 75,
+      "critical": 85
+    },
+    "memory": {
+      "warning": 85,
+      "critical": 95
+    }
+  }
+  ```
+- **Alert Types**
+  - Temperature spikes
+  - Memory leaks
+  - Process crashes
+  - Power anomalies
+  - Custom conditions
+
+### 📊 Analytics & Reporting
+- **Historical Data**
+  - Time-series metrics storage
+  - Customizable retention policies
+  - Data export in multiple formats
+  - Trend analysis and forecasting
+
+- **Performance Insights**
+  - Workload pattern recognition
+  - Resource utilization heatmaps
+  - Efficiency recommendations
+  - Cost analysis tools
+
+### 🛠 Enterprise Integration
+- **API Access**
+  - RESTful API with OpenAPI documentation
+  - Secure authentication
+  - Rate limiting and quotas
+  - Webhook support
+
+- **Security**
+  - Role-based access control
+  - Audit logging
+  - SSL/TLS encryption
+  - Regular security updates
+
+## Configuration
+
+### Backend Settings
+```python
+# config.py
+SETTINGS = {
+    'update_interval': 1000,  # ms
+    'retention_period': '30d',
+    'log_level': 'INFO',
+    'enable_analytics': True,
+    'alert_cooldown': 300,  # seconds
+}
+```
+
+### Frontend Configuration
+```typescript
+// config.ts
+export const CONFIG = {
+  API_URL: 'http://localhost:8000',
+  REFRESH_RATE: 1000,
+  THEME_MODE: 'system',  // 'light' | 'dark' | 'system'
+  CHART_HISTORY: 300,    // data points
+};
+```
+
+## System Architecture
+
+```mermaid
+graph TD
+    A[Frontend React App] -->|HTTP/WebSocket| B[FastAPI Backend]
+    B -->|NVML| C[GPU Hardware]
+    B -->|Time Series| D[Supabase]
+    B -->|Alerts| E[Notification Service]
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'feat: add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a pull request
+
+## Support
+
+- 📚 [Documentation](docs/)
+- 🐛 [Issue Tracker](https://github.com/jackccrawford/gpu-sentinel-pro/issues)
+- 💬 [Discussions](https://github.com/jackccrawford/gpu-sentinel-pro/discussions)
+- 📧 [Contact Support](mailto:support@gpusentinel.pro)
+
+## License
+
+GPU Sentinel Pro is proprietary software. See [LICENSE](LICENSE) for details.
+
+---
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-181818?style=for-the-badge&logo=supabase&logoColor=white)
-
-## License
-
-[MIT License](LICENSE) - Free for personal and commercial use.
-
----
-
-<p align="center">Built for Orphaned NVIDIAs</p>
