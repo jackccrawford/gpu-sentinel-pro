@@ -9,6 +9,9 @@ services:
       - "5183:5183"
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
+    volumes:
+      - /usr/bin/nvidia-smi:/usr/bin/nvidia-smi:ro
+      - /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1:/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1:ro
     deploy:
       resources:
         reservations:
