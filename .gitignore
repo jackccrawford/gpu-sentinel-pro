@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+**/node_modules/**
 venv/
 __pycache__/
 
@@ -38,10 +39,9 @@ supabase/volumes/
 # TypeScript
 *.tsbuildinfo
 frontend/.vite/
-frontend/node_modules/.vite/
-frontend/node_modules/.package-lock.json
-
-# Vite
-*.local
 .vite/
 dist-ssr/
+
+# Package files
+package-lock.json
+**/package-lock.json
