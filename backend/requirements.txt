@@ -6,7 +6,7 @@ python-dotenv==1.0.1
 pynvml==11.5.0
 pandas==2.2.0
 numpy==1.26.3
-sqlalchemy==1.4.51
+sqlalchemy==2.0.38
 alembic==1.13.1
 python-jose==3.3.0
 fastapi-utils==0.2.1
