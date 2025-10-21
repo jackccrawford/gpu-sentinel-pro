@@ -89,7 +89,7 @@ interface ThemeColors {
   isDark: boolean
 }
 
-const getColorScheme = (isDark: boolean) => ({
+const getColorScheme = (_isDark: boolean) => ({
   critical: {
     light: '#DC2626', // deep red (visible on white)
     dark: '#FF6B6B'   // lighter red (visible on dark)
@@ -502,9 +502,6 @@ function App() {
       
       {/* GPU Cards */}
       {data.gpus.map(gpu => {
-        const memoryPercentage = (gpu.memory_used / gpu.memory_total) * 100
-        const powerPercentage = Math.min((gpu.power_draw / 250) * 100, 100) // Assuming max power is 250W
-
         return (
           <div key={gpu.index} style={{ 
             border: `1px solid ${theme.border}`,

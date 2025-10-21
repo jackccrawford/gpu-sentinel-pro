@@ -1,6 +1,6 @@
-supabase==1.0.3
-python-dotenv==1.0.0
-pydantic==2.5.1
-pytest==7.4.3
-requests==2.32.3
-psutil>=5.9.0
+supabase==2.14.0
+python-dotenv==1.0.1
+pydantic==2.10.6
+pytest==8.3.5
+requests==2.32.4
+psutil>=6.1.1
